@@ -1,17 +1,19 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <div>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Edit Jurusan') }}
+            </h2>
+        </div>
+    </x-slot>
 
-@section('content')
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Edit Jurusan</h4>
-                </div>
-                <div class="card-body">
+    <div class="py-12">
+        <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
+            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
                     @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
+                        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            <ul class="list-disc space-y-1 ps-5">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
@@ -19,27 +21,34 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('jurusan.update', $jurusan->id) }}" method="POST">
+                    @if (session('error'))
+                        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('jurusan.update', $jurusan->id) }}" method="POST" class="space-y-6">
                         @csrf
                         @method('PUT')
 
-                        <div class="form-group mb-3">
-                            <label for="name" class="form-label">Nama Jurusan</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                   id="name" name="name" value="{{ old('name', $jurusan->name) }}" required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div>
+                            <x-input-label for="name" :value="__('Nama Jurusan')" />
+                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $jurusan->name)" required autofocus />
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                            <a href="{{ route('jurusan.index') }}" class="btn btn-secondary">Batal</a>
+                        <div class="flex items-center gap-3">
+                            <x-primary-button>
+                                Simpan
+                            </x-primary-button>
+                            <a href="{{ route('jurusan.index') }}"
+                                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                Batal
+                            </a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
+</x-app-layout>
